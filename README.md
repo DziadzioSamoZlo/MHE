@@ -1,5 +1,5 @@
 # meh
-Metaheurystyki 
+Metaheurystyki <br>
 Post Correspondence Problem - Przykład nierozstrzygalnego problemu decyzyjnego.
   Z przykładowych list z wartościami stringowymi:
   a1:a, a2:ab, a3:bba
