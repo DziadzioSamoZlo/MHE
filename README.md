@@ -7,3 +7,5 @@ Post Correspondence Problem - Przykład nierozstrzygalnego problemu decyzyjnego.
   Znaleźć rozwiązaniie które dla obu list będzie wyglądało tak samo. Rozwiązaniem powyższego przykładu będzie kolejność (3,2,3,1), ponieważ:<br>
   a3a2a3a1  = bba ab bba a <br>
   b3b2b3b1 = bb aa bb baa <br>
+  <br>
+W pliku Plot.png znajduje się wykres, ukazujący jak zmienia się szybkość działania programu w zależności od złożoności danych wejściowych.
