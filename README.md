@@ -1,4 +1,4 @@
-# meh
+# MHE
 Metaheurystyki <br>
 Post Correspondence Problem - Przykład nierozstrzygalnego problemu decyzyjnego.<br>
   Z przykładowych list z wartościami stringowymi:<br>
@@ -8,4 +8,12 @@ Post Correspondence Problem - Przykład nierozstrzygalnego problemu decyzyjnego.
   a3a2a3a1  = bba ab bba a <br>
   b3b2b3b1 = bb aa bb baa <br>
   <br>
-W pliku Plot.png znajduje się wykres, ukazujący jak zmienia się szybkość działania programu w zależności od złożoności danych wejściowych.
+
+W projekcie sprawdzać będziemy działanie różnych Metaheurystyk do tego problemu:<br>
+  -Brute Force<br>
+  -Algorytm wspinaczkowy<br>
+  -Tabu<br>
+  -Simulated annealing<br>
+  -Algorytm genetyczny<br>
+  
+Spróbuje przedstawić jak każda metaheurystyka działa, ile zajmuje czasu oraz jak rośnie jej czas wykonania dla coraz większych przykładów.
