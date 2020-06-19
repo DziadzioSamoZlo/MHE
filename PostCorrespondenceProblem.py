@@ -48,7 +48,7 @@ def best_block_to_add_with_limit(maxOccurs = 22):
         numberOfOccurs = 0
         for a in newSequence:
             if a == str(toCheck):
-                numberOfOccurs+=1
+                numberOfOccurs += 1
         if numberOfOccurs > maxOccurs:
             continue
         if checkedBlockValue == 0:
@@ -155,33 +155,27 @@ def checkIfSimilar(test):
             res = test[0:i] 
     return res
 
-def principal_period(s):
-    i = (s+s).find(s, 1, -1)
-    return None if i == -1 else s[:i]
-
-def Brutforce():
-    for i in range(0,18):
+def Bruteforce():
+    for i in range(0,20000):
         #print("najlepszy możliwy bloczek:")
-        added = best_block_to_add()
+        if working.get("sequence") == data.get("sol"):
+            print("solution found on iteration: ", i)
+            break
+        added = best_block_to_add_with_limit()
         if added == 0:
-            go_to_last_checkpoint()
-            continue
-        if principal_period(working.get("sequence")[int(len(working.get("sequence"))/2):]):
             go_to_last_checkpoint()
             continue
         #print(added)
         #print("dodawany bloczek:")
         #print(data.get(str(added)))
         add_next_block(added)
-    print("json working po zmianie:")
+    print("Brute Force found:")
     print(working["sequence"])
+    print("Solution:")
     print(data["sol"])
 
-def test():
-    print(checkIfSimilar(working.get("sequence")[7:]))
-
 clear_working_json()
-testBrutforce()
+Bruteforce()
 #print(working.get("sequence")[7:])
 #test()
 #test_new_checkpoint_method()
