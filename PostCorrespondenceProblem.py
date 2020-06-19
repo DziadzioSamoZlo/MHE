@@ -33,6 +33,34 @@ def best_block_to_add():
             return 0
     return bestPair
 
+def best_block_to_add_with_limit(maxOccurs = 22):
+    howMuchBestBlocks = 0
+    #pobieramy aktualny stan bloczków
+    baseBlock = working.get(str("workingBlocks"))
+
+    for toCheck in range(1,5):
+        #pobieramy nowy bloczek do dodania
+        checkedBlock = data.get(str(toCheck))
+        firstsqnc = baseBlock[0] + checkedBlock[0]
+        secondsqnc = baseBlock[1] + checkedBlock[1]
+        checkedBlockValue = block_value(firstsqnc, secondsqnc)
+        newSequence = working.get("sequence") + str(toCheck)
+        numberOfOccurs = 0
+        for a in newSequence:
+            if a == str(toCheck):
+                numberOfOccurs+=1
+        if numberOfOccurs > maxOccurs:
+            continue
+        if checkedBlockValue == 0:
+            howMuchBestBlocks += 1
+            if howMuchBestBlocks > 1:
+                add_checkpoint(newSequence)
+            else:
+                bestPair = toCheck
+    if howMuchBestBlocks == 0:
+            return 0
+    return bestPair
+
 def add_next_block(whichBlock):
     #tworzymy chwilowy json którego zmienimy i zastapimy nim json working
     changedJson = json.load(open("working.json", 'r'))
