@@ -17,3 +17,6 @@ W projekcie sprawdzać będziemy działanie różnych Metaheurystyk do tego prob
   -Algorytm genetyczny<br>
   
 Spróbuje przedstawić jak każda metaheurystyka działa, ile zajmuje czasu oraz jak rośnie jej czas wykonania dla coraz większych przykładów.
+<br><br>
+Dla łatwego przykładu program działa dla Brute Force i Hill climbing.<br>
+Dla trudnego przykładu program znajduje roziwązanie jedynie metodą Brute Force. <br>
