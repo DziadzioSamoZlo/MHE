@@ -112,22 +112,6 @@ def measure_time(function):
     end = time.perf_counter()
     print(function.__name__, "took:", end-start, "s")
 
-def Bruteforce(limit = 3):
-    clear_working_json()
-    for i in range(0,20000):
-        if working["workingBlocks"][0] == working["workingBlocks"][1] and i > 0 and len(working["blocksAdded"]) == 4:
-            print("solution found on iteration: ", i)
-            break
-        added = best_block_to_add_with_limit(limit)
-        if added == 0:
-            go_to_last_checkpoint()
-            continue
-        add_next_block(added)
-    print("Brute Force found:")
-    print(working["sequence"])
-
-#### Hill Climbing ####
-
 import random
 def generate_random_sol(limit, howBig = 5):
     randomSolution = ""
@@ -222,8 +206,6 @@ def check_value_for_hc(sequence):
             if str(j) in sequence:
                 blocksUsed += 1
         if blocksUsed == 4 and len(blockFirst) == len(blockSecond):
-            print("hill climbing found:")
-            print(sequence)
             return 666
         else:
             return 0
@@ -233,9 +215,25 @@ def check_if_complete():
     block = working.get("workingBlocks")
     if len(block[0]) == len(block[1]):
         return True
-    
+        
+def get_random_neighbour(neighbours):
+    return neighbours[random.randint(0, len(neighbours) - 1)]
 
-def hill_climbing(depth = 6000, blockLimit = 3):
+def Bruteforce(limit = 3):
+    clear_working_json()
+    for i in range(0,20000):
+        if working["workingBlocks"][0] == working["workingBlocks"][1] and i > 0 and len(working["blocksAdded"]) == 4:
+            print("solution found on iteration: ", i)
+            break
+        added = best_block_to_add_with_limit(limit)
+        if added == 0:
+            go_to_last_checkpoint()
+            continue
+        add_next_block(added)
+    print("Brute Force found:")
+    print(working["sequence"])
+
+def hill_climbing(depth = 10000, blockLimit = 3):
     clear_working_json()
     bestSolution = generate_random_sol(blockLimit)
     update_working_json(bestSolution)
@@ -247,6 +245,8 @@ def hill_climbing(depth = 6000, blockLimit = 3):
             neighbourValue = check_value_for_hc(neighbour)
             if neighbourValue == 666:
                 print("solution found on iteration:", i)
+                print("Hill climbing found:")
+                print(neighbour)
                 return neighbour
             elif neighbourValue <= bestValue:
                 bestSolution = neighbour
@@ -256,6 +256,32 @@ def hill_climbing(depth = 6000, blockLimit = 3):
                 bestValue = check_value_for_hc(bestSolution)
                 update_working_json(bestSolution)
         update_working_json(bestSolution)
+    print("Hill climbing failed to find solution. Best solution:", bestSolution)
+    return bestSolution
+
+def hill_climbing_nd(depth = 10000, blockLimit = 3):
+    clear_working_json()
+    bestSolution = generate_random_sol(blockLimit)
+    update_working_json(bestSolution)
+    bestValue = check_value_for_hc(bestSolution)
+    for i in range(0, depth):
+        neighbours = generate_neighbours()
+        neighbours = organize_neighbours(neighbours, blockLimit)
+        neighbour = get_random_neighbour(neighbours)
+        neighbourValue = check_value_for_hc(neighbour)
+        if neighbourValue == 666:
+            print("solution found on iteration:", i)
+            print("Hill climbing nd found:")
+            print(neighbour)
+            return neighbour
+        elif neighbourValue <= bestValue:
+            bestSolution = neighbour
+            bestValue = neighbourValue
+        else:
+            bestSolution = generate_random_sol(blockLimit)
+            bestValue = check_value_for_hc(bestSolution)
+            update_working_json(bestSolution)
+    print("Hill climbing nd failed to find solution. Best solution:", bestSolution)
     return bestSolution
 
 clear_working_json()
@@ -265,5 +291,4 @@ print("Solution for our PCP problem:")
 print(data["sol"])
 measure_time(Bruteforce)
 measure_time(hill_climbing)
-#print("base value of hillclimb:", hill_climbing())
-#print(working.get("sequence"))
+measure_time(hill_climbing_nd)
