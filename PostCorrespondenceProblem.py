@@ -219,6 +219,19 @@ def check_if_complete():
 def get_random_neighbour(neighbours):
     return neighbours[random.randint(0, len(neighbours) - 1)]
 
+def get_close_neighbours(center, neighbours):
+    #print("center: ", center)
+    #print(neighbours)
+    index = neighbours.index(center)
+    refresh_working_json()
+    excludedNeighbours = working.get("checkpoint")
+    closeNeighbours = list()
+    for i in range(-2, 3):
+        closeNeighbour = neighbours[index + i]
+        if closeNeighbour not in excludedNeighbours:
+            closeNeighbours.append(closeNeighbour)
+    return closeNeighbours
+
 def Bruteforce(limit = 3):
     clear_working_json()
     for i in range(0,20000):
@@ -284,6 +297,37 @@ def hill_climbing_nd(depth = 10000, blockLimit = 3):
     print("Hill climbing nd failed to find solution. Best solution:", bestSolution)
     return bestSolution
 
+def tabu(depth = 1000):
+    sequence = generate_random_sol(3)
+    add_checkpoint(sequence)
+    update_working_json(sequence)
+    for i in range(0, depth):
+        startSequence = sequence
+        centerValue = check_value_for_hc(sequence)
+        neighbours = generate_neighbours()
+        closeNeighbours = get_close_neighbours(sequence, neighbours)
+        nv = []
+        for neighbour in closeNeighbours:
+            neighbourValue = check_value_for_hc(neighbour)
+            nv.append(neighbourValue)
+            if neighbourValue <= centerValue:
+                #print("nv:", neighbourValue, "cv:", centerValue)
+                centerValue = neighbourValue
+                sequence = neighbour
+            if neighbourValue == 666:
+                return
+        if startSequence != sequence:
+            add_checkpoint(sequence)#dodajemy checkpoint w ramach listy już odwiedzonych sekwencji
+            startSequence = sequence
+            update_working_json(sequence)
+            #print("new block:", sequence, "with value:", centerValue)
+        else:
+            #print(sequence)
+            #print(closeNeighbours)
+            #print(nv)
+            print("tabu failed")
+            return
+    
 clear_working_json()
 data = json.load(open("testEasy.json", 'r'))
 working = json.load(open("working.json", 'r'))
@@ -292,3 +336,4 @@ print(data["sol"])
 measure_time(Bruteforce)
 measure_time(hill_climbing)
 measure_time(hill_climbing_nd)
+#measure_time(tabu)
