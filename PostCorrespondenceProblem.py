@@ -172,6 +172,26 @@ def generate_neighbours(howManyNeighbours = 84):
                     neighbours.append(newNeighbour)
     return neighbours
 
+def generate_neighbours_test():
+    neighbours = []
+    refresh_working_json()
+    centerOfAttention = working.get("sequence")
+    if len(centerOfAttention)>1:
+        baseBlocks = centerOfAttention[:-2]
+        for i in range(1, 5):
+            newNeighbour = baseBlocks + str(i)
+            neighbours.append(newNeighbour)
+            newNeighbour = centerOfAttention + str(i)
+            neighbours.append(newNeighbour)
+    else:
+        for i in range(1, 5):
+            newNeighbour = str(i)
+            neighbours.append(newNeighbour)
+            for j in range(1, 5):
+                newNeighbour = str(i) + str(j)
+                neighbours.append(newNeighbour)
+    return neighbours
+
 def organize_neighbours(neighbours, limit):
     class StopLookingForThings(Exception): pass
     try:
@@ -297,37 +317,34 @@ def hill_climbing_nd(depth = 10000, blockLimit = 3):
     print("Hill climbing nd failed to find solution. Best solution:", bestSolution)
     return bestSolution
 
-def tabu(depth = 1000):
+def tabu(depth = 100):
+    clear_working_json()
     sequence = generate_random_sol(3)
     add_checkpoint(sequence)
-    update_working_json(sequence)
     for i in range(0, depth):
-        startSequence = sequence
-        centerValue = check_value_for_hc(sequence)
-        neighbours = generate_neighbours()
-        closeNeighbours = get_close_neighbours(sequence, neighbours)
+        startValue = check_value_for_hc(sequence)
+        update_working_json(sequence)
+        closeNeighbours = generate_neighbours_test()
         nv = []
         for neighbour in closeNeighbours:
             neighbourValue = check_value_for_hc(neighbour)
             nv.append(neighbourValue)
-            if neighbourValue <= centerValue:
-                #print("nv:", neighbourValue, "cv:", centerValue)
-                centerValue = neighbourValue
-                sequence = neighbour
-            if neighbourValue == 666:
+            if neighbourValue == 0:
+                print("Tabu found:", neighbour)
                 return
-        if startSequence != sequence:
-            add_checkpoint(sequence)#dodajemy checkpoint w ramach listy już odwiedzonych sekwencji
-            startSequence = sequence
-            update_working_json(sequence)
-            #print("new block:", sequence, "with value:", centerValue)
-        else:
-            #print(sequence)
-            #print(closeNeighbours)
-            #print(nv)
-            print("tabu failed")
-            return
-    
+            if neighbourValue < startValue:
+                print("nv:", neighbourValue, "cv:", startValue)
+                startValue = neighbourValue
+                sequence = neighbour
+                update_working_json(sequence)
+                add_checkpoint(sequence)
+                break
+    print(sequence)
+    print(closeNeighbours)
+    print(nv)
+    print(startValue)
+    return
+
 clear_working_json()
 data = json.load(open("testEasy.json", 'r'))
 working = json.load(open("working.json", 'r'))
@@ -336,4 +353,8 @@ print(data["sol"])
 measure_time(Bruteforce)
 measure_time(hill_climbing)
 measure_time(hill_climbing_nd)
-#measure_time(tabu)
+measure_time(tabu)
+#bestSolution = generate_random_sol(3)
+#update_working_json(bestSolution)
+#print(generate_neighbours_test())
+#print(bestSolution)
