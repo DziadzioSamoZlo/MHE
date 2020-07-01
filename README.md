@@ -18,5 +18,5 @@ W projekcie sprawdzać będziemy działanie różnych Metaheurystyk do tego prob
   
 Spróbuje przedstawić jak każda metaheurystyka działa, ile zajmuje czasu oraz jak rośnie jej czas wykonania dla coraz większych przykładów.
 <br><br>
-Dla łatwego przykładu program działa dla Brute Force i Hill climbing.<br>
+Dla łatwego przykładu program działa dla Brute Force, Hill climbing i Tabu.<br>
 Dla trudnego przykładu program znajduje roziwązanie jedynie metodą Brute Force. <br>
